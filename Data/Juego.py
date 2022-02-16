@@ -13,10 +13,11 @@ Builder.load_file("Data/KVventanas/Juego.kv")
 class Juego(Screen):
     canvas_juego = ObjectProperty()
 
-    def __init__(self,**kargs):
+    def __init__(self,tools, **kargs):
         Screen.__init__(self,**kargs)
         self.name = "Juego"
-        self.estructura = Estructura()
+        self.tools = tools
+        self.estructura = Estructura(self.tools)
 
     def test_map(self):
         mapa = self.mapa.get_mapa()
@@ -27,7 +28,7 @@ class Juego(Screen):
     def update(self,dt):
         self.estructura.update(dt)
 
-    def draw(self,size,dt):
-        self.estructura.draw(size, self.canvas_juego.canvas,dt)
+    def draw(self,dt):
+        self.estructura.draw(self.canvas_juego.canvas,dt)
 
 
