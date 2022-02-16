@@ -5,7 +5,7 @@ from Data.Objetos.Lista_Objetos import Lista_Objetos
 
 class Estructura:
 
-    def __init__(self):
+    def __init__(self, tools):
         """
         Clase Orientada a poder organizar el orden de dibujado de los objetos,
         para darle una profundidad indicando el nivel de la capa de un solo piso
@@ -18,7 +18,10 @@ class Estructura:
         self.size = [32,32]
         self.mapa = Mapa(10,10)
         self.mapa.gen_mapa() # genera un pequeño mapaa automaticamente
+        self.puntos = [0,0]
+        self.tools = tools
         
+        self.__updateSize()
         self.registrar_canvas()
 
 
@@ -49,10 +52,19 @@ class Estructura:
         for objetos in self.__capas["coll2"]:
             pass
         
+    def __updateSize(self):
+        size = self.tools["size"]
+        self.size = [size[0]/RANGO_X_OBJS,size[1]/RANGO_Y_OBJS] #methodo que define el tamaño de los cuadros en el juego
 
-    def update(self, dt):
-        pass
-    
+    def update(self,  dt):
+        """methodo update que ajusta todo
+
+        Args:
+            dt (_type_): el tiempo transcurrido
+        """
+        self.__updateSize()
+        
+        
     def __orden_de_objetos(self):
         """Ordena los objetos en capas, para su renderizado previo
         """
@@ -67,23 +79,22 @@ class Estructura:
             for y in range(len(mapa[x])):
                 idObjs = mapa[x][y]
                 if idObjs >= 1:
+                    print(self.size)
                     self.__capas["objs"].append(self.Lista_Objetos.get_objeto(idObjs,[x*self.size[0],y*self.size[1]]))
         self.__orden_de_objetos()
         
         
 
-    def draw(self, size, canvas,dt):
+    def draw(self, canvas,dt):
         """
         Dibuja solo las capas enumeradas previamentes
         :param canvas: lienzo donde se dibujaran los objetos
         :return: None
         """
-        self.size = size = [size[0]/RANGO_X_OBJS,size[1]/RANGO_Y_OBJS] #methodo que define el tamaño de los cuadros en el juego
-                
+        
         canvas.clear() #limpiamos el canvas para dibujar
         for capas in range(1,5):
             for objetos in self.__capas[capas]:
-                objetos.size = self.size #propiedad de la clase
                 canvas.add(objetos)
                 
         
